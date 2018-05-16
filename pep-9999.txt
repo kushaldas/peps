@@ -1,0 +1,168 @@
+PEP: 9999
+Title: Python local packages directory [We need to find a proper name]
+Version: $Revision$
+Last-Modified: $Date$
+Author: Kushal Das <mail@kushaldas.in>, Steve Dower <steve.dower@python.org>,
+        Donald Stuff <donald@stufft.io>, Nick Coghlan <ncoghlan@gmail.com>
+Status: Draft
+Type: Standards Track
+Content-Type: text/x-rst
+Created: 16-May-2018
+Python-Version: 3.8
+
+
+
+Abstract
+========
+
+This PEP proposes to add to Python a mechanism to have a ``__pypackages__``
+directory  per project to have its own independent set of installed packages.
+This will share the standard library with the base installed Python. This will
+avoid the steps to create or activate or deactivate "virtual environments". Any
+Python scripts will use the ``__pypackages__`` from the base directory of the 
+script.
+
+
+
+Motivation
+==========
+
+Python virtual environments have become an essential part of development and
+teaching workflow in the community, but, at the same time it creates a different
+level entry barrier for many folks. The following are few examples of the issues
+people get into while being introduced to Python (or programming for the first
+time).
+
+- How virtual environments work is a lot of information for anyone new. It takes
+a lot of extra time and effort to explain the same.
+- Different platforms and shell environments require different sets of commands
+to work on the virtual environments. Any workshop or teaching environment with
+people coming with different operating systems installed on the laptops create a
+lot of confusion among the participants.
+- Virtual environments need to be activated on each opened terminal, if someone
+creates/opens a new terminal that by default does not get the same environment
+of a previous terminal (with virtual environment activated).
+
+
+Specification
+=============
+
+When the Python binary is executed, it attempts to determine its
+prefix (which it stores in ``sys.prefix``), which is then used to find
+the standard library and other key files, and by the ``site`` module
+to determine the location of the site-package directories.  Currently
+the prefix is found (assuming ``PYTHONHOME`` is not set) by first
+walking up the filesystem tree looking for a marker file (``os.py``)
+that signifies the presence of the standard library, and if none is
+found, falling back to the build-time prefix hard coded in the binary.
+
+This PEP proposes to add a new step in this process. If a ``__pypackages__``
+directory is found in the current working directory, then it will be included in
+``sys.path`` after the current working directory and just before the system
+site-packages. This way, if the Python executable starts in the given project
+directory, it will automatically find all the dependencies inside of
+``__pypackages__``.
+
+In case Python scripts, the script will try to find ``__pypackages__`` in the
+base directory of the script. If found, then it will be used, otherwise the
+scripts will behave as it does currently.
+
+If ``pip`` finds the same ``__pypackages__`` directory in the current directory,
+it will install  any packages there. There will also be a command line option to
+``pip`` to create the directory in case it is missing.
+
+Any project hosted on a source code manage system can have the empty
+``__pypackages__`` directory (with a file inside). After doing a fresh check out
+the source code, ``pip`` should be able to install the dependencies as required
+into ``__pypackages__`` directory.
+
+Example
+-------
+
+The following shows an example project directory structure, and how different ways
+the Python executable and any script will behave.
+
+::
+
+    foo/__pypackages__
+            Lib
+                site-packages
+                    bottle
+        myscript.py
+
+    /> python foo/myscript.py
+    sys.path[0] == 'foo'
+    sys.path[x] == 'foo/__pypackages__'
+    
+
+    cd foo
+    foo> python
+    sys.path[0] == '.'
+    sys.path[x] == './__pypackages__'
+
+    foo> python myscript.py
+
+    foo> python -m bottle
+
+    foo> /usr/bin/randomproject.sh
+        python /usr/share/randomproject/main.py
+
+    foo> /usr/bin/ansible  
+        #! /usr/bin/env python3
+    foo> python /usr/bin/ansible
+
+    
+
+We have a project directory called ``foo`` and it has a ``__pypackages__``
+inside of it. We have ``bottle`` installed in that ``__pypackages__``, and have
+``myscript.py`` file inside of the project directory.
+
+
+If we go inside of the ``foo`` directory and start the Python executable (the
+interpreter), it will find the ``__pypackages__`` directory inside of the
+current working directory and use it in the ``sys.path``. The same happens if we
+try to use the ``-m`` and use a module. In our example, ``bottle`` module will
+be found inside of the ``__pypackages__`` directory.
+
+For invoking a script, for example ``/usr/bin/randomproject.sh``, python will
+try to find a ``__pypackages__`` inside of the directory that the script resides[1]_,
+``/usr/bin``.  The same will happen in case of the last example, where we
+are executing ``/usr/bin/ansible`` from inside of the ``foo`` directory. In both cases, it will **not**
+use the ``__pypackages__`` in the current working directory (foo).
+
+Similarly, if we invoke ``myscript.py`` from the first example, it will use the
+``__pypackages__ `` directory that was in the ``foo`` directory.
+
+.. [1]_: In the case of symlinks, it is the directory where the actual script
+resides, not the symlink pointing to the script
+
+Backwards Compatibility
+=======================
+
+This does not affect any older version of Python implementation.
+
+Impact on other Python implementations
+--------------------------------------
+
+Other Python implementations will need to replicate the new behavior of the
+interpreter bootstrap, including locating ``__pypackages__`` directory and
+adding it the ``sys.path`` just before site packages, if it is present.
+
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+
+
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 80
+   coding: utf-8
+   End:
+
