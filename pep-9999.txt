@@ -34,14 +34,16 @@ people get into while being introduced to Python (or programming for the first
 time).
 
 - How virtual environments work is a lot of information for anyone new. It takes
-a lot of extra time and effort to explain them.
+  a lot of extra time and effort to explain them.
+
 - Different platforms and shell environments require different sets of commands
-to work on the virtual environments. Any workshop or teaching environment with
-people coming with different operating systems installed on the laptops create a
-lot of confusion among the participants.
+  to work on the virtual environments. Any workshop or teaching environment with
+  people coming with different operating systems installed on the laptops create a
+  lot of confusion among the participants.
+
 - Virtual environments need to be activated on each opened terminal, if someone
-creates/opens a new terminal, that by default does not get the same environment
-as in a previous terminal with virtual environment activated.
+  creates/opens a new terminal, that by default does not get the same environment
+  as in a previous terminal with virtual environment activated.
 
 
 Specification
@@ -135,7 +137,7 @@ Similarly, if we invoke ``myscript.py`` from the first example, it will use the
 ``__pypackages__ `` directory that was in the ``foo`` directory.
 
 .. [1]_: In the case of symlinks, it is the directory where the actual script
-resides, not the symlink pointing to the script
+   resides, not the symlink pointing to the script
 
 Backwards Compatibility
 =======================
