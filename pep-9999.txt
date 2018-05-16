@@ -3,7 +3,7 @@ Title: Python local packages directory [We need to find a proper name]
 Version: $Revision$
 Last-Modified: $Date$
 Author: Kushal Das <mail@kushaldas.in>, Steve Dower <steve.dower@python.org>,
-        Donald Stuff <donald@stufft.io>, Nick Coghlan <ncoghlan@gmail.com>
+        Donald Stufft <donald@stufft.io>, Nick Coghlan <ncoghlan@gmail.com>
 Status: Draft
 Type: Standards Track
 Content-Type: text/x-rst
