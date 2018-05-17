@@ -3,7 +3,7 @@ Title: Python local packages directory [We need to find a proper name]
 Version: $Revision$
 Last-Modified: $Date$
 Author: Kushal Das <mail@kushaldas.in>, Steve Dower <steve.dower@python.org>,
-        Donald Stuff <donald@stufft.io>, Nick Coghlan <ncoghlan@gmail.com>
+        Donald Stufft <donald@stufft.io>, Nick Coghlan <ncoghlan@gmail.com>
 Status: Draft
 Type: Standards Track
 Content-Type: text/x-rst
@@ -28,20 +28,23 @@ Motivation
 ==========
 
 Python virtual environments have become an essential part of development and
-teaching workflow in the community, but, at the same time it creates a different
-level entry barrier for many. The following are a few examples of the issues
+teaching workflow in the community, but at the same time, they create a
+barrier to entry for many. The following are a few examples of the issues
 people get into while being introduced to Python (or programming for the first
 time).
 
 - How virtual environments work is a lot of information for anyone new. It takes
-a lot of extra time and effort to explain the same.
+  a lot of extra time and effort to explain them.
+
 - Different platforms and shell environments require different sets of commands
-to work on the virtual environments. Any workshop or teaching environment with
-people coming with different operating systems installed on their laptops create a
-lot of confusion among the participants.
+  to work on the virtual environments. Any workshop or teaching environment with
+  people coming with different operating systems installed on their laptops create a
+  lot of confusion among the participants.
+
+
 - Virtual environments need to be activated on each opened terminal, if someone
-creates/opens a new terminal that by default does not get the same environment
-of a previous terminal (with virtual environment activated).
+  creates/opens a new terminal, that by default does not get the same environment
+  as in a previous terminal with virtual environment activated.
 
 
 Specification
@@ -64,18 +67,20 @@ site-packages. This way, if the Python executable starts in the given project
 directory, it will automatically find all the dependencies inside of
 ``__pypackages__``.
 
-In case Python scripts, the script will try to find ``__pypackages__`` in the
+In case Python scripts, Python will try to find ``__pypackages__`` in the
 base directory of the script. If found, then it will be used, otherwise the
-scripts will behave as it does currently.
+Python will behave as it does currently.
+
 
 If any package management tool finds the same ``__pypackages__`` directory in
 the current working directory, it will install any packages there and also
 create it if required.
 
-Any project hosted on a source code manage system can have the empty
-``__pypackages__`` directory (with a file inside). After doing a fresh check out
-the source code, ``pip`` should be able to install the dependencies as required
-into ``__pypackages__`` directory.
+
+Projects that use a source management system can include a ``__pypackages__``
+directory (empty or with e.g. a file like ``.gitignore``). After doing a fresh
+check out the source code, ``pip`` can be used to install the required
+dependencies directly into this directory.
 
 Example
 -------
@@ -85,7 +90,8 @@ the Python executable and any script will behave.
 
 ::
 
-    foo/__pypackages__
+    foo
+        __pypackages__
             Lib
                 site-packages
                     bottle
@@ -143,7 +149,7 @@ The above two examples are only cases where ``__pypackages__`` from current
 working directory is used.
 
 .. [1]_: In the case of symlinks, it is the directory where the actual script
-resides, not the symlink pointing to the script
+   resides, not the symlink pointing to the script
 
 Backwards Compatibility
 =======================
@@ -178,4 +184,3 @@ This document has been placed in the public domain.
    fill-column: 80
    coding: utf-8
    End:
-
