@@ -126,8 +126,9 @@ the Python executable and any script will behave.
     
 
 We have a project directory called ``foo`` and it has a ``__pypackages__``
-inside of it. We have ``bottle`` installed in that ``__pypackages__``, and have
-``myscript.py`` file inside of the project directory.
+inside of it. We have ``bottle`` installed in that
+``__pypackages__/python3.8/Lib``, and have ``myscript.py`` file inside of the
+project directory.
 
 For invoking a script, for example ``/usr/bin/randomproject.sh``, Python will
 try to find a ``__pypackages__`` inside of the directory that the script
@@ -151,6 +152,18 @@ working directory is used.
 
 .. [1]_: In the case of symlinks, it is the directory where the actual script
    resides, not the symlink pointing to the script
+
+
+Security Considerations
+=======================
+
+While executing a Python script, it will not consider the ``__pypackages__`` in
+the current directory, instead if there is a ``__pypackages__`` directory in the
+same path of the script, that will be used.
+
+For example, if we execute ``python /usr/share/myproject/fancy.py``, if there is a
+``__pypackages__`` directory inside of ``/usr/share/myproject/`` directory, it
+will be used. 
 
 Backwards Compatibility
 =======================
