@@ -67,14 +67,15 @@ site-packages. This way, if the Python executable starts in the given project
 directory, it will automatically find all the dependencies inside of
 ``__pypackages__``.
 
-In case Python scripts, Python will try to find ``__pypackages__`` in the
-base directory of the script. If found, then it will be used, otherwise the
-Python will behave as it does currently.
+In case Python scripts, Python will try to find ``__pypackages__`` in the base
+directory of the script. If found (along with the current Python version
+directory inside), then it will be used, otherwise the Python will behave as it
+does currently.
 
 
 If any package management tool finds the same ``__pypackages__`` directory in
 the current working directory, it will install any packages there and also
-create it if required.
+create it if required based on Python version.
 
 
 Projects that use a source management system can include a ``__pypackages__``
@@ -92,14 +93,14 @@ the Python executable and any script will behave.
 
     foo
         __pypackages__
-            Lib
-                site-packages
+            python3.8
+                Lib
                     bottle
         myscript.py
 
     /> python foo/myscript.py
     sys.path[0] == 'foo'
-    sys.path[x] == 'foo/__pypackages__'
+    sys.path[x] == 'foo/__pypackages__/python3.8/Lib'
     
 
     cd foo
@@ -117,7 +118,7 @@ the Python executable and any script will behave.
 
     foo> python
     sys.path[0] == '.'
-    sys.path[x] == './__pypackages__'
+    sys.path[x] == './__pypackages__/python3.8/Lib'
 
     foo> python -m bottle
 
