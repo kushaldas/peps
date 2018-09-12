@@ -183,6 +183,12 @@ Other Python implementations will need to replicate the new behavior of the
 interpreter bootstrap, including locating the ``__pypackages__`` directory and
 adding it the ``sys.path`` just before site packages, if it is present.
 
+Reference Implementation
+========================
+
+`Here <https://github.com/kushaldas/cpython/tree/pypackages`_ is a PoC
+implementation (in the ``pypackages`` branch).
+
 
 Rejected Ideas
 ==============
